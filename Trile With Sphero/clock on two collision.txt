@@ -1,0 +1,46 @@
+var hour = 0;
+var minute = 0;
+var turn = 2;
+var hourS = '';
+var minuteS = '';
+var first_name = 'Alex'; // <-------------- put your first name here
+var last_name = '';  // <-------------- put your last name here
+
+
+async function startProgram() {
+	await speak ('Hello,'+ first_name+ ' '+ last_name+ 'Nice to meet you', true);
+	await speak('Tell Sphero a time in the day', true);
+	
+	hour = 1;   // <-------------------------------- Enter "Hour" here : 1 to 12
+	minute = 10; // <-------------------------------- Enter "minute" here : 1 to 60
+	
+	hourS = hour.toString();
+	minuteS = minute.toString();
+	setMainLed({ r: 61, g: 255, b: 0 }); // Setting color to Green
+	await speak(hourS + 'oclock and' + minuteS + 'minutes', false);
+	await delay(1);
+	setHeading(hour * 30);// Going to hour position
+	setSpeed(50);
+}
+
+async function onCollision() {
+	stopRoll();
+	await delay(1);
+	turn = turn +1;
+	if(turn%2===1){
+	setMainLed({ r: 255, g: 45, b: 0 }); // Setting color to Red
+	await speak(hourS + 'oclock',false);
+	await delay(1);
+	await roll(hour * 30, -34, 1);// Going back to origin
+	await delay(1);
+	setHeading(minute * 6);// Going to minute position
+	setSpeed(45);
+	}else{
+		setMainLed({ r: 43, g: 63, b: 255 });5 // Set1ting color to Blue
+		await speak(minuteS + 'minutes',false);
+		await delay(1);
+		await roll(minute * 6, -34, 1);// Going back to origin		
+	}
+}
+registerEvent(EventType.onCollision, onCollision);
+
